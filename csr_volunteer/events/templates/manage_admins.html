@@ -1,0 +1,58 @@
+{% extends 'nav.html' %}
+{% block title %}Manage Admins{% endblock %}
+
+{% block varbody %}
+<div class="container my-5">
+    <h2 class="mb-4 text-warning">Manage Admins</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="container mt-5">
+  <h2 class="text-light mb-4">CSR Events Created by You</h2>
+  <div class="text-end mb-3">
+  <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
+    ← Back to Admin Dashboard
+  </a>
+</div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admin in admins %}
+            <tr>
+                <td>{{ admin.username }}</td>
+                <td>{{ admin.email }}</td>
+                <td>
+                    {% if admin.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'toggle_admin_status' admin.id %}" class="btn btn-sm {% if admin.is_active %}btn-warning{% else %}btn-success{% endif %}">
+                        {% if admin.is_active %}Deactivate{% else %}Reactivate{% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary mt-3">Back to Dashboard</a>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'nav.html' %}
+{% block title %}Employee Profile{% endblock %}
+{% block varbody %}
+
+<a href="{% url 'employee_dashboard' %}" class="btn btn-secondary mt-3">
+  ← Back to Dashboard
+</a>
+
+<div class="container mt-5 text-light">
+  <div class="card bg-dark border border-secondary shadow-lg mb-4">
+    <div class="card-body">
+      <h3 class="card-title">👤 Your Profile</h3>
+      <p><strong>Username:</strong> {{ request.user.username }}</p>
+      <p><strong>Email:</strong> {{ request.user.email }}</p>
+      <p><strong>Department:</strong> {{ profile.department }}</p>
+      <p><strong>Phone:</strong> {{ profile.phone }}</p>
+      <p><strong>Joined On:</strong> {{ profile.joined_on }}</p>
+      {% if profile.supervisor %}
+        <p><strong>Supervisor:</strong> {{ profile.supervisor.username }}</p>
+      {% else %}
+        <p><em>No Supervisor Assigned</em></p>
+      {% endif %}
+      <a href="{% url 'edit_employee_profile' %}" class="btn btn-outline-light btn-sm">Edit Profile</a>
+    </div>
+  </div>
+
+  <!-- ✅ Past Events Section -->
+  <div class="card bg-dark border border-secondary shadow-lg">
+    <div class="card-body">
+      <h4 class="card-title mb-3">📅 Past Events Attended</h4>
+
+      {% if past_events %}
+        <ul class="list-group">
+          {% for event in past_events %}
+            <li class="list-group-item bg-dark text-light border-secondary">
+              <strong>{{ event.title }}</strong> – {{ event.date|date:"M d, Y" }}<br>
+              <small class="text-muted">{{ event.description|truncatewords:20 }}</small>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">You have not attended any past events.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

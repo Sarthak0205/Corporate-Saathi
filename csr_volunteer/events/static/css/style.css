@@ -1,0 +1,59 @@
+body {
+  background-color: #121212;
+  color: #fefae0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.hero-section {
+  height: 70vh;
+  background: url('../images/hero.jpg') no-repeat center/cover;
+  padding: 20px;
+  text-shadow: 2px 2px 5px #000;
+}
+
+.card {
+  background-color: #1e1e1e;
+  border: none;
+  color: #e9d8a6;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+.about-section {
+  min-height: 400px;
+  background: url('../images/about_us.jpeg') no-repeat right center/cover;
+  background-attachment: scroll;
+  position: relative;
+  padding-left: 3rem;
+  /* Optional overlay for text readability */
+}
+
+.about-section::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 50%;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6); /* dark overlay behind text */
+  z-index: 1;
+}
+
+.about-section .container,
+.about-section .row > div {
+  position: relative;
+  z-index: 2;
+}
+
+.about-section h2,
+.about-section p,
+.about-section .lead,
+.about-section .fw-semibold {
+  color: #f0f0f0;
+}
+

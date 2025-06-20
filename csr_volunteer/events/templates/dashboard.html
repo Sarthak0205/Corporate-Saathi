@@ -1,0 +1,43 @@
+{% extends 'nav.html' %}
+{% block title %}Dashboard - Corporate Sathi{% endblock %}
+{% block varbody %}
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+<!-- Hero Section -->
+<header class="hero-section text-center text-white d-flex align-items-center justify-content-center">
+  <div>
+    <h1 class="display-4 fw-bold">Welcome to Corporate Sathi</h1>
+    <p class="lead">Be the change. Volunteer and make an impact.</p>
+  </div>
+</header>
+
+<!-- About Us Section -->
+<section class="about-section d-flex align-items-center" id="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 text-light py-5">
+        <h2 class="fw-bold mb-3">About <span class="text-primary">Corporate Sathi</span></h2>
+        <p class="lead">We help companies make real impact in society through meaningful CSR initiatives.</p>
+        <p>Our mission is to foster collaboration between corporates and communities through streamlined event coordination, volunteer tracking, and impact reporting.</p>
+        <p class="fw-semibold">Empowering change, one initiative at a time.</p>
+      </div>
+      <div class="col-md-6"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Features, How It Works, Impact, Events, Testimonials, FAQ, CTA -->
+<!-- Paste these sections from your existing dashboard.html as they are already complete -->
+
+{% endblock %}

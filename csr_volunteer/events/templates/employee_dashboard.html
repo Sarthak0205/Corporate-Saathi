@@ -1,0 +1,50 @@
+{% extends 'nav.html' %}
+{% block title %}Employee Dashboard{% endblock %}
+{% block varbody %}
+
+<div class="container mt-4">
+  <!-- Profile Section -->
+  <div class="card bg-dark text-light mb-4 border border-secondary shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title">👤 Profile</h4>
+      <p><strong>Username:</strong> {{ request.user.username }}</p>
+      {% if request.user.employeeprofile %}
+        <p><strong>Department:</strong> {{ request.user.employeeprofile.department }}</p>
+      {% endif %}
+      <!-- Optional: Link to edit profile -->
+      <!-- <a href="{% url 'edit_employee_profile' %}" class="btn btn-outline-light btn-sm">Edit Profile</a> -->
+    </div>
+  </div>
+
+  <!-- Events Section -->
+  <h3 class="text-light mb-4">Upcoming CSR Events</h3>
+  {% if upcoming_events %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+ {% for event in upcoming_events %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ event.title }}</h5>
+      <p class="card-text"><strong>Date:</strong> {{ event.date }}</p>
+      <p class="card-text"><strong>Description:</strong> {{ event.description }}</p>
+
+      {% if event.id in registered_event_ids %}
+        <!-- Show Withdraw button -->
+        <form action="{% url 'withdraw_event' event.id %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Withdraw</button>
+        </form>
+      {% else %}
+        <!-- Show Register button -->
+        <a href="{% url 'register_event' event.id %}" class="btn btn-success">Register</a>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+
+    </div>
+  {% else %}
+    <div class="alert alert-info mt-3">No upcoming events.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

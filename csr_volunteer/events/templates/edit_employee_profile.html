@@ -1,0 +1,17 @@
+{% extends 'nav.html' %}
+{% block title %}Edit Profile{% endblock %}
+{% block varbody %}
+<div class="text-end mb-3">
+    <a href="{% url 'employee_dashboard' %}" class="btn btn-secondary">
+      ← Back to Employee Dashboard
+    </a>
+  </div>
+<div class="container mt-4 text-light">
+  <h3>Edit Profile</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save Changes</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'nav.html' %}
+{% block title %}Admin Registration - Corporate Sathi{% endblock %}
+{% block varbody %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="col-md-6">
+    <div class="card bg-secondary p-4 border-0">
+      <h3 class="text-warning text-center mb-4">Register as Admin</h3>
+       <!-- Django Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="password1" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password1" name="password1" required>
+        </div>
+        <div class="mb-3">
+          <label for="password2" class="form-label">Confirm Password</label>
+          <input type="password" class="form-control" id="password2" name="password2" required>
+        </div>
+        <button type="submit" class="btn btn-warning w-100">Register</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

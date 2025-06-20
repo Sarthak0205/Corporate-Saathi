@@ -1,0 +1,44 @@
+{% extends 'nav.html' %}
+{% block title %}Create Employee{% endblock %}
+{% block varbody %}
+
+<div class="container mt-5">
+  <div class="text-end mb-3">
+  <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
+    ← Back to Admin Dashboard
+  </a>
+</div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card bg-secondary text-light p-4 shadow">
+        <h3 class="text-center mb-4">Create New Employee</h3>
+
+  
+        {% if form.errors %}
+  <div class="alert alert-danger">
+    <ul>
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+        <form method="post" action="">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success w-100">Create</button>
+</form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

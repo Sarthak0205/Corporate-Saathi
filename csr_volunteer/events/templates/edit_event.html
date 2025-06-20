@@ -1,0 +1,16 @@
+{% extends 'nav.html' %}
+{% block title %}Edit CSR Event{% endblock %}
+
+{% block varbody %}
+<div class="container mt-5 text-light">
+  <h2 class="mb-4">Edit CSR Event</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Update Event</button>
+    <a href="{% url 'list_events' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

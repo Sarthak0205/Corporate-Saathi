@@ -1,0 +1,32 @@
+{% extends 'nav.html' %}
+{% block title %}Employee Login - Corporate Sathi{% endblock %}
+{% block varbody %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="col-md-5">
+    <div class="card bg-secondary p-4 border-0">
+      <h3 class="text-info text-center mb-4">Employee Login</h3>
+       <!-- Django Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-info w-100">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
