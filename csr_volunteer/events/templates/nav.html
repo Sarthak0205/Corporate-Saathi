@@ -32,41 +32,37 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-black shadow-sm">
     <div class="container">
-   {% if user.is_authenticated %}
-    {% if user.is_staff %}
-        <a class="navbar-brand d-flex align-items-center" href="{% url 'admin_dashboard' %}">
+
+      {% if user.is_authenticated %}
+        {% if user.is_staff %}
+          <a class="navbar-brand d-flex align-items-center" href="{% url 'admin_dashboard' %}">
             <img src="{% static 'images/logo.png' %}" alt="Logo" height="30" class="me-2">
             <span>Corporate Sathi</span>
-        </a>
-    {% else %}
-        <a class="navbar-brand d-flex align-items-center" href="{% url 'employee_dashboard' %}">
+          </a>
+        {% else %}
+          <a class="navbar-brand d-flex align-items-center" href="{% url 'employee_dashboard' %}">
             <img src="{% static 'images/logo.png' %}" alt="Logo" height="30" class="me-2">
             <span>Corporate Sathi</span>
+          </a>
+        {% endif %}
+      {% else %}
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
+          <img src="{% static 'images/logo.png' %}" alt="Logo" height="30" class="me-2">
+          <span>Corporate Sathi</span>
         </a>
-    {% endif %}
-{% else %}
-    <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
-        <img src="{% static 'images/logo.png' %}" alt="Logo" height="30" class="me-2">
-        <span>Corporate Sathi</span>
-    </a>
-{% endif %}
+      {% endif %}
 
-
-    {% if user.is_authenticated and not user.is_staff %}
- 
-{% endif %}
-{% if user.is_authenticated %}
-  {% if messages %}
-    <div class="container mt-3">
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-          {{ message }}
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endif %}
-
+      {% if user.is_authenticated %}
+        {% if messages %}
+          <div class="container mt-3">
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endif %}
 
       <div class="ms-auto">
         {% if request.user.is_authenticated %}
@@ -75,12 +71,16 @@
               👤 {{ request.user.username }}
             </button>
             <ul class="dropdown-menu">
-  <li><a class="dropdown-item" href="{% url 'employee_dashboard' %}">Employee Dashboard</a></li>
-  <li><a class="dropdown-item" href="{% url 'employee_profile' %}">Profile</a></li>
-  <li><hr class="dropdown-divider"></li>
-  <li><a class="dropdown-item text-danger" href="{% url 'logout_user' %}">Logout</a></li>
-</ul>
-
+              {% if request.user.is_staff %}
+                <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
+              {% else %}
+                <li><a class="dropdown-item" href="{% url 'employee_dashboard' %}">Employee Dashboard</a></li>
+              {% endif %}
+              <li><a class="dropdown-item" href="{% url 'employee_profile' %}">Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'logout_user' %}">Logout</a></li>
+            </ul>
+          </div>
         {% else %}
           <a href="{% url 'admin_login' %}" class="btn btn-outline-warning me-2">Admin Login</a>
           <a href="{% url 'employee_login' %}" class="btn btn-outline-info">Employee Login</a>

@@ -1,0 +1,47 @@
+{% extends 'nav.html' %}
+
+{% block title %}Event Participants{% endblock %}
+
+{% block varbody %}
+<div class="container mt-5">
+  <h2 class="text-light mb-4">Event: {{ event.title }}</h2>
+  <p class="text-light">
+    {{ event.description }}<br>
+    📍 {{ event.location }} | 📅 {{ event.date }}
+  </p>
+
+  <!-- Back Button -->
+  <div class="mb-3">
+    <a href="{% url 'list_events' %}" class="btn btn-secondary">← Back to Events</a>
+  </div>
+
+  <!-- Export Button -->
+  {% if participants %}
+  <div class="mb-3">
+    <a href="{% url 'export_event_participants_csv' event.id %}" class="btn btn-success">
+  📥 Export as CSV
+</a>
+
+  </div>
+  {% endif %}
+
+  <!-- Participant List -->
+  {% if participants %}
+  <div class="card bg-dark text-light">
+    <div class="card-header">
+      Registered Employees ({{ participants|length }})
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for emp in participants %}
+      <li class="list-group-item bg-secondary text-light d-flex justify-content-between">
+        <span>{{ emp.user.username }}</span>
+        <span>{{ emp.department }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% else %}
+  <p class="text-warning">No employees registered yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

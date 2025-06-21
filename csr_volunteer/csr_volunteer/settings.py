@@ -6,7 +6,9 @@ from venv import EnvBuilder
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = EnvBuilder('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your-default-insecure-secret-key')
+
+LOGIN_URL = '/admin_login/'  # or the actual path for your admin login
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +42,7 @@ ROOT_URLCONF = 'csr_volunteer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # ✅ POINTS TO YOUR TEMPLATE FOLDER
+'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

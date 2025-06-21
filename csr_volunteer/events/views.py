@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import EmployeeCreationForm, EmployeeProfileForm 
+from .forms import  EmployeeProfileForm 
 from django.utils import timezone
  # Ensure this is already imported at the top
 
@@ -137,6 +137,8 @@ from django.db.models import Q
 @user_passes_test(is_admin)
 def list_employees(request):
     query = request.GET.get('q')
+    department_filter = request.GET.get('department')
+
     employees = EmployeeProfile.objects.select_related('user')
 
     if query:
@@ -144,9 +146,17 @@ def list_employees(request):
             Q(user__username__icontains=query) | Q(department__icontains=query)
         )
 
-    return render(request, 'list_employees.html', {'employees': employees, 'query': query})
+    if department_filter and department_filter != 'all':
+        employees = employees.filter(department=department_filter)
 
+    departments = EmployeeProfile.objects.values_list('department', flat=True).distinct()
 
+    return render(request, 'list_employees.html', {
+        'employees': employees,
+        'query': query,
+        'departments': departments,
+        'selected_department': department_filter
+    })
 
 # views.py
 
@@ -234,23 +244,6 @@ def withdraw_event(request, event_id):
 
     return redirect('employee_dashboard')
 
-@login_required
-@user_passes_test(is_admin)
-def create_employee(request):
-    if request.method == 'POST':
-        form = EmployeeCreationForm(request.POST)
-
-        if form.is_valid():
-            try:
-                form.save()
-                messages.success(request, "Employee created successfully.")
-                return redirect('admin_dashboard')
-            except IntegrityError:
-                form.add_error('username', "This username is already taken.")
-    else:
-        form = EmployeeCreationForm()
-
-    return render(request, 'create_employee.html', {'form': form})
 
 @login_required
 def employee_dashboard(request):
@@ -307,3 +300,115 @@ def edit_employee_profile(request):
         form = EmployeeProfileForm(instance=profile)
 
     return render(request, 'edit_employee_profile.html', {'form': form})
+
+@login_required
+@user_passes_test(is_admin)
+def delete_event(request, event_id):
+    event = get_object_or_404(CSRProject, id=event_id)
+    
+    event.delete()
+    messages.success(request, "Event deleted successfully.")
+    return redirect('list_events')
+
+from django.shortcuts import get_object_or_404
+from .models import CSRProject
+
+@login_required
+@user_passes_test(is_admin)
+def event_participants(request, event_id):
+    event = get_object_or_404(CSRProject, id=event_id)
+
+    # Get all participation records for this event
+    participations = EventParticipation.objects.filter(event=event).select_related('employee')
+
+    # Get employee profiles from participating users
+    employee_profiles = EmployeeProfile.objects.filter(user__in=[p.employee for p in participations])
+
+    context = {
+        'event': event,
+        'participants': employee_profiles,
+        'total_participants': employee_profiles.count(),
+    }
+
+    return render(request, 'event_participants.html', context)
+
+from .forms import EmployeeRegistrationForm
+def register_employee(request):
+    if request.method == 'POST':
+        form = EmployeeRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')  # Replace with your actual dashboard URL name
+    else:
+        form = EmployeeRegistrationForm()
+
+    return render(request, 'register_employee.html', {'form': form})
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import EmployeeProfile
+
+def is_admin(user):
+    return user.is_superuser or user.is_staff
+
+@login_required
+@user_passes_test(is_admin)
+def create_employee_credential(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        department = request.POST.get('department')
+        phone = request.POST.get('phone')
+        supervisor_id = request.POST.get('supervisor')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+            return redirect('create_employee_credential')
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
+
+        supervisor = User.objects.get(id=supervisor_id) if supervisor_id else None
+
+        EmployeeProfile.objects.create(
+            user=user,
+            department=department,
+            phone=phone,
+            supervisor=supervisor
+        )
+
+        messages.success(request, "Employee credential created successfully.")
+        return redirect('admin_dashboard')
+
+    supervisors = User.objects.filter(is_staff=True)
+    return render(request, 'create_employee_credential.html', {'supervisors': supervisors})
+
+from django.http import HttpResponse
+import csv
+from .models import EventParticipation, CSRProject, EmployeeProfile
+
+def export_event_participants_csv(request, event_id):
+    event = CSRProject.objects.get(id=event_id)
+    participations = EventParticipation.objects.filter(event=event).select_related('employee')
+
+    # Prepare CSV response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{event.title}_participants.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Username', 'Email', 'Department', 'Registered On'])
+
+    for p in participations:
+        profile = EmployeeProfile.objects.filter(user=p.employee).first()
+        department = profile.department if profile else 'N/A'
+
+        writer.writerow([
+            p.employee.username,
+            p.employee.email,
+            department,
+            p.registered_on.strftime("%Y-%m-%d %H:%M"),
+        ])
+
+    return response

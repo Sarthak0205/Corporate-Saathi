@@ -1,10 +1,7 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import User
-from django.conf import settings
 
+# Employee profile model
 class EmployeeProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     department = models.CharField(max_length=100)
@@ -21,8 +18,7 @@ class EmployeeProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-
-
+# CSR Project model
 class CSRProject(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -33,8 +29,7 @@ class CSRProject(models.Model):
     def __str__(self):
         return self.title
 
-
-# Participation by employee
+# Event participation model
 class EventParticipation(models.Model):
     event = models.ForeignKey(CSRProject, on_delete=models.CASCADE)
     employee = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -42,3 +37,5 @@ class EventParticipation(models.Model):
 
     def __str__(self):
         return f"{self.employee.username} joined {self.event.title}"
+    
+    

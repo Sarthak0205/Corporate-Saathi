@@ -2,11 +2,11 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block varbody %}
-<div class="container mt-5 text-light">
+<div class="container py-5 text-light">
 
-  <h2 class="mb-4">Welcome to Admin Dashboard</h2>
+  <h2 class="mb-4 fw-bold">👨‍💼 Welcome to Admin Dashboard</h2>
 
-  <!-- Show Django messages if any -->
+  <!-- Django Messages -->
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -16,34 +16,49 @@
     {% endfor %}
   {% endif %}
 
-  <!-- Dashboard Buttons -->
-  <div class="mb-3 d-flex flex-wrap gap-2">
-    <a href="{% url 'create_event' %}" class="btn btn-success">
-      <i class="bi bi-calendar-plus"></i> Create CSR Event
-    </a>
+  <!-- Dashboard Actions -->
+  <div class="row g-3">
 
-    <a href="{% url 'list_events' %}" class="btn btn-info">
-      <i class="bi bi-list-ul"></i> View All Events
-    </a>
+    <div class="col-12 col-md-6 col-lg-4">
+      <a href="{% url 'create_event' %}" class="btn btn-success w-100 py-2 shadow-sm">
+        <i class="bi bi-calendar-plus"></i> Create CSR Event
+      </a>
+    </div>
 
-    <a href="{% url 'create_employee' %}" class="btn btn-warning">
-      <i class="bi bi-person-plus"></i> Create Employee
-    </a>
+    <div class="col-12 col-md-6 col-lg-4">
+      <a href="{% url 'list_events' %}" class="btn btn-info w-100 py-2 shadow-sm">
+        <i class="bi bi-list-ul"></i> View All Events
+      </a>
+    </div>
 
-    <a href="{% url 'list_employees' %}" class="btn btn-outline-light">
-      <i class="bi bi-people"></i> View Employees
-    </a>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <a href="{% url 'list_employees' %}" class="btn btn-outline-light w-100 py-2 shadow-sm">
+        <i class="bi bi-people"></i> View Employees
+      </a>
+    </div>
+
+ <div class="col-12 col-md-6 col-lg-4">
+  <a href="{% url 'create_employee_credential' %}" class="btn btn-warning w-100 py-2 shadow-sm">
+    <i class="bi bi-person-plus"></i> Create Employee Credential
+  </a>
+</div>
+
+
 
     {% if request.user.is_superuser %}
-    <a href="{% url 'manage_admins' %}" class="btn btn-danger">
-      <i class="bi bi-person-gear"></i> Manage Admins
-    </a>
+    <div class="col-12 col-md-6 col-lg-4">
+      <a href="{% url 'manage_admins' %}" class="btn btn-danger w-100 py-2 shadow-sm">
+        <i class="bi bi-person-gear"></i> Manage Admins
+      </a>
+    </div>
     {% endif %}
+
   </div>
 
-  <hr class="bg-light">
+  <hr class="my-5 border-light">
 
-  <p>Here you can manage CSR initiatives, create and track events, and oversee employee participation.</p>
+  <p class="lead">Manage CSR initiatives, track employee involvement, and monitor organizational impact through this dashboard.</p>
 
 </div>
 {% endblock %}

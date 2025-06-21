@@ -1,0 +1,15 @@
+{% extends 'nav.html' %}
+
+{% block title %}Register Employee{% endblock %}
+
+{% block varbody %}
+<div class="container mt-5">
+  <h2>Register New Employee</h2>
+  <form method="post" class="mt-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Register</button>
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}
